@@ -1,4 +1,4 @@
-target/boot/boot.bin: src/boot/boot.asm src/boot/print.asm
+target/boot/boot.bin: src/boot/boot.asm src/boot/print.asm src/boot/disk.asm
 	nasm -f bin src/boot/boot.asm -o target/boot/boot.bin
 
 target/master.img: target/boot/boot.bin
