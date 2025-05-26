@@ -64,3 +64,4 @@ read_disk:
     mov [edi], ax
     add edi, 2 
     loop .read_disk_readw
+    ret
