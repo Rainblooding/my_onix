@@ -5,11 +5,14 @@ dw 0x55aa
 mov si, loading
 call print
 
+call detect_memory
+
 
 jmp $
 
 %include "src/boot/print.asm"
 %include "src/boot/disk.asm"
+%include "src/boot/memory.asm"
 
 loading:
     db "Loading Onix...", 0; \n\r

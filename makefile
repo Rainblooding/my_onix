@@ -16,8 +16,8 @@ clean:
 
 .PHONY: bochs
 bochs: target/master.img
-	bochs -q
+	bochs -q -f bochsrc
 
 .PHONY: bochsdbg
 bochsdbg: target/master.img
-	bochsdbg -q
+	bochsdbg -q -f bochsrc_gui

@@ -2,6 +2,8 @@ CHAR_0      equ     0x30 ; 字符‘0’的16进制编码
 CHAR_A      equ     0x41 ; 字符‘A’的编码
 CHAR_ENTER  equ     13   ; 回车
 NEWLINE     equ     10   ; 换行
+HEX_PREFIX:
+    db "0x", 0
 
 ; 打印字符
 print:
@@ -15,10 +17,13 @@ print:
     jmp .print_next
 
 .print_done:
-    call println
     ret
 
 
+print_hex_prefix:
+    mov si, HEX_PREFIX
+    call print
+    ret
 
 ; 打印16进制数字
 print_hex:
@@ -53,13 +58,6 @@ print_hex:
     cmp ax, 0
     jne .print_hex_next
 
-    ; 打印'0x'
-    mov ah, 0x0e
-    mov al, '0'
-    int 0x10
-    mov al, 'x'
-    int 0x10
-
 ; 打印在栈中的字符
 .print_hex_show:
     ; 弹出栈顶元素 根据cx中的字符个数使用loop循环打印
@@ -69,7 +67,6 @@ print_hex:
 
 ; 结束
 .print_hex_done:
-    call println
     ret
 
 
