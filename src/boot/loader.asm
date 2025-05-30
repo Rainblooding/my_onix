@@ -2,10 +2,15 @@
 dw 0x55aa
 
 ; 打印字符串
-mov si, loading
+push word loading
 call print
 
+    xchg bx, bx
 call detect_memory
+; 打印字符串
+push word loading
+call print
+
 
 
 jmp $
@@ -15,4 +20,4 @@ jmp $
 %include "src/boot/memory.asm"
 
 loading:
-    db "Loading Onix...", 0; \n\r
+    db "Loading Onix...", 10, 13, 0; \n\r

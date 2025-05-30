@@ -2,6 +2,8 @@ base_addr:
     db "BaseAddr:", 0
 length:
     db "Length:", 0
+type:
+    db "Type:", 0
 separator:
     db ",", 0
 detecting:
@@ -9,8 +11,9 @@ detecting:
 ards_count:
     dw 0
 ards_buffer:
-times 512 db 0
-
+times 256 db 0
+ards_buffer_end:
+    db "end", 0
 detect_memory:
     xor ebx, ebx
 
@@ -34,44 +37,71 @@ detect_memory:
     cmp ebx, 0
     jnz  .detect_memory_next
 
-    mov si, detecting
+    push word detecting
     call print
 
     ; 结构体数量
     mov cx, [ards_count]
     ; 结构体指针
-    mov si, 0
+    mov si, ards_buffer
 .detect_memory_next_show:
-    push cx
-    mov eax, [ards_buffer + si]
-    push ax
-    shr eax, 16
-    push ax
-    mov eax, [ards_buffer + si + 4]
-    push ax
-    shr eax, 16
-    push ax
 
-    mov si, base_addr
+    push word base_addr
     call print
     call print_hex_prefix
-    pop ax
-    call print_hex
-    pop ax
-    call print_hex
-    pop ax
-    call print_hex
-    pop ax
-    call print_hex
-    mov si, separator
+
+    mov eax, [si]
+    push eax
+xchg bx, bx; bochs 魔术断点
+    call .print_detect_memory
+xchg bx, bx; bochs 魔术断点
+    mov eax, [si + 4]
+    push eax
+    call .print_detect_memory
+
+    push word separator
     call print
 
-    mov ebx, [ards_buffer + si + 8]
-    mov edx, [ards_buffer + si + 16]
+    push word length
+    call print
+    mov eax, [si + 8]
+    push eax
+    call .print_detect_memory
+    mov eax, [si + 12]
+    push eax
+    call .print_detect_memory
+    push word separator
+    call print
+
+    push word type
+    call print
+    mov eax, [si + 16]
+    push eax
+    call .print_detect_memory
+
     add si, 20
-    xchg bx, bx
-    pop cx
+    call println
     loop .detect_memory_next_show
+    ret
+
+
+.print_detect_memory:
+xchg bx, bx; bochs 魔术断点
+    push bp
+    mov bp, sp
+    push eax
+
+
+    mov eax, [bp + 4]
+    push ax
+    call print_hex
+    shr eax, 16
+    push ax
+    call print_hex
+
+    pop eax
+    mov sp, bp
+    pop bp
     ret
 
 .detect_memory_error:

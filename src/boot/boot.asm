@@ -2,22 +2,22 @@
 jmp start
 
 name:
-    db 'CHEN', 0
+    db 'CHEN', 10, 13, 0
 error_msg:
-    db 'ERROR', 0
+    db 'ERROR', 10, 13, 0
  
 start:
     mov ax, 3
     int 0x10
 
-    mov si, name
+    push word name
     call print
-
-    mov ax, name
+    push word name
     call print_hex
+    call println
 
 ;xchg bx, bx; bochs 魔术断点
-    mov cl, 4
+    mov cl, 6
     mov edi, 0x1000
     mov ebx, 2
 
@@ -29,7 +29,7 @@ start:
     jmp 0:0x1002
 
 error:
-    mov si, error_msg
+    push word error_msg
     call print
 
 jmp $
