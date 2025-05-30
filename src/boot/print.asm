@@ -38,6 +38,7 @@ print_hex_prefix:
     mov bp, sp
     push word HEX_PREFIX
     call print
+    add sp, 2
     mov sp, bp
     pop bp
     ret
@@ -95,7 +96,6 @@ print_hex:
     push word HEX_NUMBER
     call print
     add  sp, 2
-xchg bx, bx; bochs 魔术断点
     pop si
     pop dx
     pop cx

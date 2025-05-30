@@ -39,45 +39,55 @@ detect_memory:
 
     push word detecting
     call print
+    add sp, 2
 
     ; 结构体数量
     mov cx, [ards_count]
     ; 结构体指针
     mov si, ards_buffer
 .detect_memory_next_show:
+    xchg bx, bx
 
     push word base_addr
     call print
+    add sp, 2
     call print_hex_prefix
 
     mov eax, [si]
     push eax
-xchg bx, bx; bochs 魔术断点
     call .print_detect_memory
-xchg bx, bx; bochs 魔术断点
+    add sp, 4
     mov eax, [si + 4]
     push eax
     call .print_detect_memory
+    add sp, 4
 
     push word separator
     call print
+    add sp, 2
 
     push word length
     call print
+    add sp, 2
     mov eax, [si + 8]
     push eax
     call .print_detect_memory
+    add sp, 4
     mov eax, [si + 12]
     push eax
     call .print_detect_memory
+    add sp, 4
     push word separator
     call print
+    add sp, 2
 
     push word type
     call print
+    add sp, 2
     mov eax, [si + 16]
     push eax
     call .print_detect_memory
+    add sp, 4
 
     add si, 20
     call println
@@ -86,7 +96,6 @@ xchg bx, bx; bochs 魔术断点
 
 
 .print_detect_memory:
-xchg bx, bx; bochs 魔术断点
     push bp
     mov bp, sp
     push eax
@@ -95,9 +104,11 @@ xchg bx, bx; bochs 魔术断点
     mov eax, [bp + 4]
     push ax
     call print_hex
+    add sp, 2
     shr eax, 16
     push ax
     call print_hex
+    add sp, 2
 
     pop eax
     mov sp, bp
