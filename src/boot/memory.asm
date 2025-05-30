@@ -46,7 +46,6 @@ detect_memory:
     ; 结构体指针
     mov si, ards_buffer
 .detect_memory_next_show:
-    xchg bx, bx
 
     push word base_addr
     call print

@@ -1,7 +1,7 @@
 target/boot/boot.bin: src/boot/boot.asm src/boot/print.asm src/boot/disk.asm
 	nasm -f bin src/boot/boot.asm -o target/boot/boot.bin
 
-target/boot/loader.bin: src/boot/loader.asm src/boot/print.asm src/boot/disk.asm src/boot/memory.asm
+target/boot/loader.bin: src/boot/loader.asm src/boot/print.asm src/boot/disk.asm src/boot/memory.asm src/boot/gdt.asm
 	nasm -f bin src/boot/loader.asm -l target/boot/loader.lst -o target/boot/loader.bin
 
 target/master.img: target/boot/boot.bin target/boot/loader.bin
