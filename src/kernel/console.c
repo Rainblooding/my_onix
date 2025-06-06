@@ -29,6 +29,7 @@ static u16 erase = 0x0720; // 空格
 
 // 光标
 typedef struct pos_struct {
+    u32 mem_postion;
     u32 position;
     u32 x;
     u32 y;
@@ -36,6 +37,7 @@ typedef struct pos_struct {
 
 // 控制台
 typedef struct console_struct {
+    u32 mem_postion;
     u32 position;
     cursor cur;
 } console;
@@ -58,6 +60,8 @@ static void get_console_pos()
     global_console.position = inb(CRT_DATA_REG) << 8;
     outb(CRT_ADDR_REG, CRT_START_ADDR_L);
     global_console.position |= inb(CRT_DATA_REG);
+
+    global_console.mem_position = MEM_BASE + (global_console.position < 1)
 }
 
 // 获取光标位置
@@ -72,6 +76,8 @@ static void get_cur_pos() {
     u32 delta = cur->position - global_console.position;
     cur->x = delta % WIDTH;
     cur->y = delta / WIDTH;
+
+    cur->mem_position = MEM_BASE + (cur->position < 1)
 }
 
 // 设置控制台位置
@@ -94,6 +100,10 @@ static void set_cursor_pos()
     outb(CRT_DATA_REG, (cur->position & 0xff));
 }
 
+static void scroll_up()
+{
+
+}
 
 void console_init()
 {
@@ -102,9 +112,11 @@ void console_init()
 
 void console_clear()
 {
+    global_console.mem_position = MEM_BASE;
+    global_console.position = 0;
 
-    global_console.position  = 0;
     cursor *cur = &global_console.cur;
+    cur->mem_position = MEM_BASE;
     cur->position = 0;
     cur->x = 0;
     cur->y = 0;
