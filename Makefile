@@ -23,15 +23,15 @@ ${BUILD}/boot/loader.bin: ${SRC}/boot/loader.asm ${SRC}/boot/print.asm ${SRC}/bo
 	$(shell mkdir -p $(dir $@))
 	nasm -f bin src/boot/loader.asm -o $@
 
-$(BUILD)/kernel/start.o: ${SRC}/kernel/start.asm
+$(BUILD)/kernel/%.o: ${SRC}/kernel/%.asm
 	$(shell mkdir -p $(dir $@))
-	nasm -f elf32 $(DEBUG) ${SRC}/kernel/start.asm -o $@
+	nasm -f elf32 $(DEBUG) $^ -o $@
 
-$(BUILD)/kernel/main.o: ${SRC}/kernel/main.c
+$(BUILD)/kernel/%.o: ${SRC}/kernel/%.c
 	$(shell mkdir -p $(dir $@))
 	gcc $(CFLAGS) $(DEBUG) $(INCLUDE) -c  $^ -o $@
 
-$(BUILD)/kernel.bin: ${BUILD}/kernel/start.o $(BUILD)/kernel/main.o
+$(BUILD)/kernel.bin: ${BUILD}/kernel/start.o $(BUILD)/kernel/main.o $(BUILD)/kernel/io.o
 	$(shell mkdir -p $(dir $@))
 	ld -m elf_i386 -static $^ -o $@ -Ttext $(ENTRYPONIT)
 
