@@ -230,7 +230,7 @@ void console_write(char *buf, u32 count)
 {
     char ch;
     cursor *cur = &global_console.cur;
-    char *ptr = (char *) cur->mem_position;
+    char **ptr = (char **) &cur->mem_position;
     while(count--)
     {
         ch = *buf++;
@@ -254,11 +254,10 @@ void console_write(char *buf, u32 count)
                     command_lf();
 
                 }
-                *ptr++ = ch;
-                *ptr++ = attr;
+                *(*ptr)++ = ch;
+                *(*ptr)++ = attr;
                 cur->x += 1;
                 cur->position += 1;
-                cur->mem_position += 2;
                 break;
         }
     }
